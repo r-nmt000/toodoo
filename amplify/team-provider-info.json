@@ -1,0 +1,15 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-toodoo-dev-222034-authRole",
+            "UnauthRoleArn": "arn:aws:iam::377128059439:role/amplify-toodoo-dev-222034-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::377128059439:role/amplify-toodoo-dev-222034-authRole",
+            "Region": "ap-northeast-1",
+            "DeploymentBucketName": "amplify-toodoo-dev-222034-deployment",
+            "UnauthRoleName": "amplify-toodoo-dev-222034-unauthRole",
+            "StackName": "amplify-toodoo-dev-222034",
+            "StackId": "arn:aws:cloudformation:ap-northeast-1:377128059439:stack/amplify-toodoo-dev-222034/48a4de30-d655-11ea-9374-06df36989374",
+            "AmplifyAppId": "d3n0wt33k57632"
+        }
+    }
+}
