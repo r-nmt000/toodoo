@@ -3,16 +3,36 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Amplify from 'aws-amplify';
 import aws_export from './src/aws-exports';
+import {createStackNavigator} from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import MenuScreen from "./src/screens/MenuScreen";
+import InboxScreen from "./src/screens/InboxScreen";
+import TodayScreen from "./src/screens/TodayScreen";
 
 Amplify.configure(aws_export);
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="TodayScreen"
+      >
+        <Stack.Screen
+          name="MenuScreen"
+          component={MenuScreen}
+        />
+        <Stack.Screen
+          name="InboxScreen"
+          component={InboxScreen}
+        />
+        <Stack.Screen
+          name="TodayScreen"
+          component={TodayScreen}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
 }
 
 const styles = StyleSheet.create({
