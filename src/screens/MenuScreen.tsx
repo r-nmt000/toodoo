@@ -1,10 +1,44 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import { RouteProp } from '@react-navigation/native';
+import {ListItem} from "react-native-elements";
+import {StackParamList} from "./types";
+import {StackNavigationProp} from "@react-navigation/stack";
 
-const MenuScreen = () => {
+type MenuScreenNavigationProp = StackNavigationProp<StackParamList, 'MenuScreen'>
+type MenuScreenRouteProp = RouteProp<StackParamList, 'MenuScreen'>
+
+interface MenuScreenProps {
+  navigation: MenuScreenNavigationProp,
+  route: MenuScreenRouteProp;
+};
+
+const MenuScreen = ({navigation}: MenuScreenProps): JSX.Element => {
+
   return (
     <View>
-        <Text>menu</Text>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.goBack();
+        }}
+      >
+        <ListItem
+          chevron
+          bottomDivider={true}
+          title="Inbox"
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.goBack();
+        }}
+      >
+        <ListItem
+          chevron
+          bottomDivider={true}
+          title="Today"
+        />
+      </TouchableOpacity>
     </View>
   );
 };
