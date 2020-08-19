@@ -1,33 +1,84 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
+import {Button, IconButton} from "react-native-paper";
 
 interface NewTodoBottomSheetProps {
 }
 
-const NewTodoContent = (props: NewTodoBottomSheetProps): JSX.Element => {
+const NewTodoContent: React.FC<NewTodoBottomSheetProps> = (props) => {
   return (
-    <View style={styles.panel}>
-      <View>
-        <Text>Copy</Text>
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder="Add Todo"
+      />
+      <View style={styles.row}>
+        <Button style={styles.button} mode="outlined" icon="calendar">Today</Button>
+        <Button style={styles.button} mode="outlined" icon="inbox">Inbox</Button>
+      </View>
+      <View style={StyleSheet.flatten([styles.row, styles.spaceBetween])}>
+        <View style={styles.row}>
+          <IconButton icon="tag-outline"/>
+          <IconButton icon="flag-variant-outline"/>
+          <IconButton icon="alarm-check"/>
+          <IconButton icon="comment-outline"/>
+        </View>
+        <View style={styles.row}>
+          <IconButton icon="arrow-up-circle-outline"/>
+        </View>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  panel: {
+  container: {
     height: 600,
-    padding: 20,
-    backgroundColor: '#2c2c2fAA',
-    paddingTop: 20,
+    paddingTop: 8,
+    backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 0 },
-    shadowRadius: 5,
-    shadowOpacity: 0.4,
+    display: 'flex'
   },
-
+  button: {
+    marginRight: 8
+  },
+  input: {
+    height: 40,
+    fontSize: 16,
+    marginLeft: 16,
+    // borderColor: 'gray',
+    // borderWidth: 1,
+  },
+  row: {
+    // flex: 1,
+    flexDirection: 'row',
+    // borderColor: 'gray',
+    // borderWidth: 1,
+  },
+  surround: {
+    borderColor: 'gray',
+    borderWidth: 1,
+  },
+  spaceBetween: {
+    justifyContent: 'space-between',
+  },
+  iconButton: {
+    borderColor: 'gray',
+    borderWidth: 1,
+  },
+  test1: {
+    borderColor: 'gray',
+    borderWidth: 1,
+    backgroundColor: 'blue',
+  },
+  test2: {
+    borderColor: 'red',
+    borderWidth: 1,
+    backgroundColor: 'red',
+  }
 });
+
+const testFlatten = StyleSheet.flatten([styles.test1, styles.test2, styles.row]);
 
 export default NewTodoContent;

@@ -1,11 +1,11 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Amplify from 'aws-amplify';
 import aws_export from './src/aws-exports';
-import {createStackNavigator, StackScreenProps} from "@react-navigation/stack";
+import {createStackNavigator} from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import BottomSheet from 'reanimated-bottom-sheet'
+import Animated from 'react-native-reanimated'
 import { Provider as PaperProvider, Portal, FAB } from 'react-native-paper';
 import MenuScreen from "./src/screens/MenuScreen";
 import InboxScreen from "./src/screens/InboxScreen";
@@ -15,10 +15,31 @@ import NewTodoContent from "./src/components/NewTodoContent";
 
 Amplify.configure(aws_export);
 const Stack = createStackNavigator<StackParamList>();
+const AnimatedView = Animated.View;
 
 const App = () => {
 
   const bs = React.createRef<BottomSheet>();
+  let fall = new Animated.Value(1);
+
+  const renderShadow = () => {
+    const animatedShadowOpacity = Animated.interpolate(fall, {
+      inputRange: [0, 1],
+      outputRange: [0.5, 0],
+    });
+
+    return (
+      <AnimatedView
+        pointerEvents="none"
+        style={[
+          styles.shadowContainer,
+          {
+            opacity: animatedShadowOpacity,
+          },
+        ]}
+      />
+    )
+  };
 
   return (
     <NavigationContainer>
@@ -54,6 +75,7 @@ const App = () => {
           initialSnap={1}
           renderContent={() => { return <NewTodoContent/>}}
         />
+        {renderShadow()}
       </Portal>
     </NavigationContainer>
   )
@@ -70,7 +92,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 24,
     right: 16,
-  }
+  },
+  shadowContainer: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#000',
+  },
 });
 
 export default () => {
