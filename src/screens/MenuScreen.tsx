@@ -2,10 +2,8 @@ import React from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import {ListItem} from "react-native-elements";
-import BottomSheet from 'reanimated-bottom-sheet'
 import {StackParamList} from "./types";
 import {StackNavigationProp} from "@react-navigation/stack";
-import NewTodoContent from "../components/NewTodoContent";
 
 type MenuScreenNavigationProp = StackNavigationProp<StackParamList, 'MenuScreen'>
 type MenuScreenRouteProp = RouteProp<StackParamList, 'MenuScreen'>
@@ -15,8 +13,7 @@ interface MenuScreenProps {
   route: MenuScreenRouteProp;
 };
 
-const MenuScreen = ({navigation}: MenuScreenProps): JSX.Element => {
-
+const MenuScreen: React.FC<MenuScreenProps> = ({navigation})  => {
   return (
     <View>
       <TouchableOpacity

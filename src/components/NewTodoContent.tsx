@@ -1,19 +1,35 @@
 import React, {useEffect, useState} from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import {View, TextInput, StyleSheet, GestureResponderEvent} from 'react-native';
 import {Button, IconButton} from "react-native-paper";
+import { API, graphqlOperation } from 'aws-amplify';
+import {createTodo} from "../graphql/mutations";
 
 interface NewTodoBottomSheetProps {
 }
 
 const NewTodoContent: React.FC<NewTodoBottomSheetProps> = (props) => {
-  const [title, setTitle] = useState("");
+  const [name, setName] = useState("");
   const inputRef = React.createRef<TextInput>();
 
   const isTitleEmpty = (): boolean => {
-    if (title) {
+    if (name) {
       return false;
     }
     return true;
+  };
+
+  const addTodo = async (event: GestureResponderEvent) => {
+    event.preventDefault();
+    console.log(name);
+
+    const input = {
+      name: name,
+      completed: false,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    await API.graphql(graphqlOperation(createTodo, {input}))
   };
 
   return (
@@ -22,8 +38,8 @@ const NewTodoContent: React.FC<NewTodoBottomSheetProps> = (props) => {
         ref={inputRef}
         style={styles.input}
         placeholder="Add Todo"
-        value={title}
-        onChangeText={text => setTitle(text)}
+        value={name}
+        onChangeText={text => setName(text)}
       />
       <View style={styles.row}>
         <Button style={styles.button} mode="outlined" icon="calendar">Today</Button>
@@ -37,7 +53,12 @@ const NewTodoContent: React.FC<NewTodoBottomSheetProps> = (props) => {
           <IconButton color="gray" icon="comment-outline"/>
         </View>
         <View style={styles.row}>
-          <IconButton disabled={isTitleEmpty()} icon="arrow-up-circle-outline" size={32}/>
+          <IconButton
+            disabled={isTitleEmpty()}
+            icon="arrow-up-circle-outline"
+            size={32}
+            onPress={addTodo}
+          />
         </View>
       </View>
     </View>
