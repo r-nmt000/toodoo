@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import {Button, IconButton} from "react-native-paper";
 
@@ -6,11 +6,24 @@ interface NewTodoBottomSheetProps {
 }
 
 const NewTodoContent: React.FC<NewTodoBottomSheetProps> = (props) => {
+  const [title, setTitle] = useState("");
+  const inputRef = React.createRef<TextInput>();
+
+  const isTitleEmpty = (): boolean => {
+    if (title) {
+      return false;
+    }
+    return true;
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
+        ref={inputRef}
         style={styles.input}
         placeholder="Add Todo"
+        value={title}
+        onChangeText={text => setTitle(text)}
       />
       <View style={styles.row}>
         <Button style={styles.button} mode="outlined" icon="calendar">Today</Button>
@@ -18,13 +31,13 @@ const NewTodoContent: React.FC<NewTodoBottomSheetProps> = (props) => {
       </View>
       <View style={StyleSheet.flatten([styles.row, styles.spaceBetween])}>
         <View style={styles.row}>
-          <IconButton icon="tag-outline"/>
-          <IconButton icon="flag-variant-outline"/>
-          <IconButton icon="alarm-check"/>
-          <IconButton icon="comment-outline"/>
+          <IconButton color="gray" icon="tag-outline"/>
+          <IconButton color="gray" icon="flag-variant-outline"/>
+          <IconButton color="gray" icon="alarm-check"/>
+          <IconButton color="gray" icon="comment-outline"/>
         </View>
         <View style={styles.row}>
-          <IconButton icon="arrow-up-circle-outline"/>
+          <IconButton disabled={isTitleEmpty()} icon="arrow-up-circle-outline" size={32}/>
         </View>
       </View>
     </View>
