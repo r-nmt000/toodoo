@@ -3,11 +3,14 @@ import {Dispatch} from "react";
 import { API, graphqlOperation, Auth } from "aws-amplify";
 import {ActionTypes} from "./types";
 import {createTodo} from "../graphql/mutations";
+import {listTodos} from "../graphql/queries";
 
 export interface Todo {
   id: number;
-  title: string;
+  name: string;
   completed: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface FetchTodosAction {
@@ -41,9 +44,10 @@ const initialState: TodoState = {
 };
 
 const todoReducer = (state: TodoState, action: TodoAction):TodoState => {
+  console.log('todo reducer is called');
   switch(action.type) {
     case ActionTypes.FETCH_TODOS:
-      return state;
+      return {todos: action.payload};
     case ActionTypes.DELETE_TODO:
       return state;
     case ActionTypes.ADD_TODO:
@@ -55,12 +59,12 @@ const todoReducer = (state: TodoState, action: TodoAction):TodoState => {
   }
 };
 
-const fetchTodos = () => {
-  return async (dispatch: Dispatch<FetchTodosAction>) => {
-    const response = {data: []};
+const fetchTodos = (dispatch: Dispatch<FetchTodosAction>) => {
+  return async () => {
+    const response = await API.graphql(graphqlOperation(listTodos));
     dispatch({
       type: ActionTypes.FETCH_TODOS,
-      payload: response.data
+      payload: response.data.listTodos.items
     })
   };
 };

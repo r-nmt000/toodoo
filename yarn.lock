@@ -2479,6 +2479,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-5.9.5.tgz#3bad0d855d2e813be085ec305139d4175c512ccc"
   integrity sha512-PbSsRmhRwYIMdeVJTf9gJtvW0TVq/hmgz1xyjsrTIsQ7QS7wbMEiv1Eb/M/y6AEEsdUped5Axm5xykq9TGISHg==
 
+"@react-navigation/compat@^5.2.5":
+  version "5.2.5"
+  resolved "https://registry.yarnpkg.com/@react-navigation/compat/-/compat-5.2.5.tgz#b8e110f46418834dece9319374e0161cf5a976eb"
+  integrity sha512-5LpRr6YmuXVf3XbS/qKV83KzHe0/atcIRGC1d86TJMnF6mcwfCmBhhpLETIF1S2Nrf29bwwiHl7IZdx+GZGZcg==
+
 "@react-navigation/core@^5.12.3":
   version "5.12.3"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-5.12.3.tgz#0484fcca290569a0dc10b70b99f00edd3f1fd93c"
