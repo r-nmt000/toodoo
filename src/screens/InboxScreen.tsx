@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity, Button} from 'react-native';
 import { API, graphqlOperation } from 'aws-amplify';
 import { GraphQLResult } from "@aws-amplify/api";
@@ -9,6 +9,9 @@ import { List } from 'react-native-paper';
 import {StackParamList} from "./types";
 import {StackNavigationProp} from "@react-navigation/stack";
 import { RouteProp } from '@react-navigation/native';
+import TodoListItem from "../components/TodoListItem";
+import {SwipeListView} from "react-native-swipe-list-view";
+import TodoListItemBackword from "../components/TodoListItemBackword";
 
 type InboxScreenNavigationProp = StackNavigationProp<StackParamList, 'InboxScreen'>
 type InboxScreenRouteProp = RouteProp<StackParamList, 'MenuScreen'>
@@ -20,37 +23,44 @@ interface InboxScreenProps {
 
 const InboxScreen: React.FC<InboxScreenProps> = ({navigation}) => {
   const {state:{todos}, fetchTodos} = useContext(TodoContext);
-  console.log('inboxscreen is rendered');
-  console.log(todos);
-
-  useEffect(() => {
-    console.log('useEffect');
-    console.log(todos);
-  }, []);
+  const [isLeftOpen, setLeftOpen] = useState(false);
 
 
   return (
-    <View>
+    <View style={styles.container}>
       <NavigationEvents onWillFocus={fetchTodos}/>
-      <FlatList
+      <SwipeListView
         data={todos}
         keyExtractor={item => item.id}
-        renderItem={({item}) => {
+        disableLeftSwipe={true}
+        leftActionValue={12}
+        rightActionValue={-12}
+        onLeftAction={() => {
+          console.log('left open');
+          setLeftOpen(true)
+        }}
+        onRightAction={() => {
+          console.log('right open');
+          setLeftOpen(true)
+        }}
+        renderItem={(data, rowMap) => {
           return (
-            // タップしたらbottomsheetを表示
-            <TouchableOpacity onPress={() => {
-              //navigation.navigate('TrackDetail', {_id: item._id});
-            }}>
-              <Text>{item.name}</Text>
-            </TouchableOpacity>
+            <TodoListItem name={data.item.name}/>
           )
-        }
-        }
+        }}
+        renderHiddenItem={ (data, rowMap) => (
+          <TodoListItemBackword isOpen={isLeftOpen}/>
+        )}
       />
     </View>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    flex: 1
+  }
+});
 
 export default InboxScreen;
