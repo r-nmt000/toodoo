@@ -15,7 +15,7 @@ interface MenuScreenProps {
 
 const MenuScreen: React.FC<MenuScreenProps> = ({navigation})  => {
   return (
-    <View>
+    <View style={styles.container}>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('InboxScreen');
@@ -42,6 +42,11 @@ const MenuScreen: React.FC<MenuScreenProps> = ({navigation})  => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    flex: 1
+  }
+});
 
 export default MenuScreen;
