@@ -1,12 +1,12 @@
 import createDataContext from "./createDataContext";
 import {Dispatch} from "react";
-import { API, graphqlOperation, Auth } from "aws-amplify";
+import {API, graphqlOperation} from "aws-amplify";
 import {ActionTypes} from "./types";
-import {createTodo} from "../graphql/mutations";
 import {listTodos} from "../graphql/queries";
+import {deleteTodo} from "../graphql/mutations";
 
 export interface Todo {
-  id: number;
+  id: string;
   name: string;
   completed: boolean;
   createdAt: Date;
@@ -20,7 +20,7 @@ export interface FetchTodosAction {
 
 export interface DeleteTodoAction {
   type: ActionTypes.DELETE_TODO;
-  payload: number;
+  payload: string;
 }
 
 export interface AddTodoAction {
@@ -49,9 +49,15 @@ const todoReducer = (state: TodoState, action: TodoAction):TodoState => {
     case ActionTypes.FETCH_TODOS:
       return {todos: action.payload};
     case ActionTypes.DELETE_TODO:
-      return state;
+      const deletedTodoId = action.payload;
+      const updatedTodos = state.todos.filter(
+        todo => todo.id !== deletedTodoId);
+      return {todos: updatedTodos};
     case ActionTypes.ADD_TODO:
-      return state;
+      const newTodo = action.payload;
+      console.log('addTodo in reducer');
+      console.log(newTodo);
+      return {todos: [...state.todos, newTodo]};
     case ActionTypes.EDIT_TODO:
       return state;
     default:
@@ -69,18 +75,23 @@ const fetchTodos = (dispatch: Dispatch<FetchTodosAction>) => {
   };
 };
 
-const deleteTodo = (id: number): DeleteTodoAction => {
-  return {
-    type: ActionTypes.DELETE_TODO,
-    payload: id
+const removeTodo = (dispatch: Dispatch<DeleteTodoAction>) => {
+  return async (id: string) => {
+    const input = {id: id};
+    dispatch({
+      type: ActionTypes.DELETE_TODO,
+      payload: id
+    })
+    await API.graphql(graphqlOperation(deleteTodo, {input}));
   }
 };
 
-const addTodo = () => {
-  return async (title: string, callback: () => void) => {
-    const todo = { title: title, completed: false, createdAt: new Date(), updatedAt: new Date() };
-    await API.graphql(graphqlOperation(createTodo, {todo}));
-    callback();
+const addTodo = (dispatch: Dispatch<AddTodoAction>) => {
+  return (todo: Todo) => {
+    dispatch({
+      type: ActionTypes.ADD_TODO,
+      payload: todo
+    })
   };
 };
 
@@ -94,5 +105,5 @@ const editTodo = (todo: Todo): EditTodoAction => {
 
 export const { Context, Provider } = createDataContext(
   todoReducer,
-  {fetchTodos, deleteTodo},
+  {fetchTodos, addTodo, removeTodo},
   initialState);

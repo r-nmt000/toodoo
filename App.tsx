@@ -15,28 +15,36 @@ import {StackParamList} from "./src/screens/types";
 import NewTodoContent from "./src/components/NewTodoContent";
 import { Context as TodoContext, Todo, Provider as TodoProvider } from "./src/contexts/todoContext";
 import useTodo from "./src/hooks/useTodo";
-import {onCreateTodo} from "./src/graphql/subscriptions";
+import {onCreateTodo, onDeleteTodo} from "./src/graphql/subscriptions";
 
 Amplify.configure(aws_export);
 const Stack = createStackNavigator<StackParamList>();
 const AnimatedView = Animated.View;
 
 const App = () => {
-  // const { addTodo } = useContext(TodoContext);
-  // useEffect(() => {
-  //   const createTodoListener = (API.graphql(graphqlOperation(onCreateTodo)) as Observable<object>)
-  //     .subscribe({
-  //       next: (todo: Todo) => {
-  //         addTodo(todo);
-  //       }
-  //     });
-  //
-  //   return () => {
-  //     if (createTodoListener) {
-  //       createTodoListener.unsubscribe();
-  //     }
-  //   };
-  // }, []);
+  const { addTodo, deleteTodo } = useContext(TodoContext);
+  useEffect(() => {
+    const createTodoListener = (API.graphql(graphqlOperation(onCreateTodo)) as Observable<object>)
+      .subscribe({
+        next: (todoData) => {
+          const todo = todoData.value.data.onCreateTodo;
+          addTodo(todo);
+        }
+      });
+    const deleteTodoListener = (API.graphql(graphqlOperation(onDeleteTodo)) as Observable<object>)
+      .subscribe({
+        next: (todoData) => {
+          // const todo = todoData.value.data.onDeleteTodo;
+          // deleteTodo(todo);
+        }
+      });
+
+    return () => {
+      if (createTodoListener) {
+        createTodoListener.unsubscribe();
+      }
+    };
+  }, []);
 
   const bs = React.createRef<BottomSheet>();
   let fall = new Animated.Value(1);

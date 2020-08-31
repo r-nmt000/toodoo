@@ -2,19 +2,19 @@ import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { List } from 'react-native-paper';
 
-interface TodoListItemBackwordProps {
-  isOpen: boolean;
+interface TodoListItemBackwardProps {
+  isTodoDone?: boolean;
 }
 
-const TodoListItemBackword: React.FC<TodoListItemBackwordProps> = ({isOpen}) => {
+const TodoListLeftItem: React.FC<TodoListItemBackwardProps> = ({isTodoDone}) => {
   const [backgroundColor, setBackgroundColor] = useState("#ffffff)");
   useEffect(() => {
-    if (isOpen) {
-      setBackgroundColor("#009900");
+    if (isTodoDone) {
+      setBackgroundColor("#007700");
     } else {
-      setBackgroundColor("#999999");
+      setBackgroundColor("#aaaaaa");
     }
-  }, [isOpen]);
+  }, [isTodoDone]);
 
   return (
     <List.Item
@@ -27,8 +27,8 @@ const TodoListItemBackword: React.FC<TodoListItemBackwordProps> = ({isOpen}) => 
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: '#999999'
+    backgroundColor: '#aaaaaa'
   },
 });
 
-export default TodoListItemBackword;
+export default TodoListLeftItem;
