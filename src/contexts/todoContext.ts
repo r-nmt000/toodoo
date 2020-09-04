@@ -70,6 +70,7 @@ const fetchTodos = (dispatch: Dispatch<FetchTodosAction>) => {
     const response = await API.graphql(graphqlOperation(listTodos));
     dispatch({
       type: ActionTypes.FETCH_TODOS,
+      // @ts-ignore
       payload: response.data.listTodos.items
     })
   };
@@ -81,13 +82,13 @@ const removeTodo = (dispatch: Dispatch<DeleteTodoAction>) => {
     dispatch({
       type: ActionTypes.DELETE_TODO,
       payload: id
-    })
+    });
     await API.graphql(graphqlOperation(deleteTodo, {input}));
   }
 };
 
 const addTodo = (dispatch: Dispatch<AddTodoAction>) => {
-  return (todo: Todo) => {
+  return async (todo: Todo) => {
     dispatch({
       type: ActionTypes.ADD_TODO,
       payload: todo
@@ -95,15 +96,17 @@ const addTodo = (dispatch: Dispatch<AddTodoAction>) => {
   };
 };
 
-const editTodo = (todo: Todo): EditTodoAction => {
-  return {
-    type: ActionTypes.EDIT_TODO,
-    payload: todo
-  }
+const editTodo = (dispatch: Dispatch<EditTodoAction>) => {
+  return async (todo: Todo) => {
+    dispatch({
+      type: ActionTypes.EDIT_TODO,
+      payload: todo
+    });
+  };
 };
 
 
 export const { Context, Provider } = createDataContext(
   todoReducer,
-  {fetchTodos, addTodo, removeTodo},
+  {fetchTodos, addTodo, removeTodo, editTodo},
   initialState);

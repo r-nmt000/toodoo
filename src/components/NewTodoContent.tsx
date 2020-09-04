@@ -1,68 +1,101 @@
-import React, {useEffect, useState} from 'react';
-import {View, TextInput, StyleSheet, GestureResponderEvent} from 'react-native';
+import React from 'react';
+import {View, TextInput, StyleSheet } from 'react-native';
 import {Button, IconButton} from "react-native-paper";
 import { API, graphqlOperation } from 'aws-amplify';
 import {createTodo} from "../graphql/mutations";
 
-interface NewTodoBottomSheetProps {
+interface NewTodoContentProps {
 }
 
-const NewTodoContent: React.FC<NewTodoBottomSheetProps> = (props) => {
-  const [name, setName] = useState("");
-  const inputRef = React.createRef<TextInput>();
+interface NewTodoContentStatus {
+  name: string
+}
 
-  const isTitleEmpty = (): boolean => {
-    if (name) {
+class NewTodoContent extends React.Component<NewTodoContentProps, NewTodoContentStatus>{
+  inputRef = React.createRef<TextInput>();
+
+  state = {
+    name: ""
+  };
+
+  isNameEmpty = (): boolean => {
+    if (this.state.name) {
       return false;
     }
     return true;
   };
 
-  const addTodo = async (event: GestureResponderEvent) => {
-    event.preventDefault();
-    console.log(name);
-
+  addTodo = (name: string) => {
     const input = {
-      name: name,
+      name: this.state.name,
       completed: false,
       createdAt: new Date(),
       updatedAt: new Date()
     };
-
-    await API.graphql(graphqlOperation(createTodo, {input}))
+    API.graphql(graphqlOperation(createTodo, {input}));
   };
 
-  return (
-    <View style={styles.container}>
-      <TextInput
-        ref={inputRef}
-        style={styles.input}
-        placeholder="Add Todo"
-        value={name}
-        onChangeText={text => setName(text)}
-      />
-      <View style={styles.row}>
-        <Button style={styles.button} mode="outlined" icon="calendar">Today</Button>
-        <Button style={styles.button} mode="outlined" icon="inbox">Inbox</Button>
-      </View>
-      <View style={StyleSheet.flatten([styles.row, styles.spaceBetween])}>
+  clearTitle = () => {
+    this.setState({name: ""});
+  };
+
+  focusOnInput = () => {
+    if (this.inputRef && this.inputRef.current) {
+      this.inputRef.current.focus();
+    }
+  };
+  blurInput = () => {
+    if (this.inputRef && this.inputRef.current) {
+      this.inputRef.current.blur();
+    }
+  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <TextInput
+          ref={this.inputRef}
+          style={styles.input}
+          placeholder="Add Todo"
+          value={this.state.name}
+          onChangeText={text => this.setState({name:text})}
+          onKeyPress={({nativeEvent: {key}}) => {
+            console.log('onkeypress called');
+            console.log(key);
+            if (key === 'Enter') {
+              console.log('enter is pressed');
+              this.addTodo(this.state.name);
+              this.clearTitle();
+            }
+          }}
+        />
         <View style={styles.row}>
-          <IconButton color="gray" icon="tag-outline"/>
-          <IconButton color="gray" icon="flag-variant-outline"/>
-          <IconButton color="gray" icon="alarm-check"/>
-          <IconButton color="gray" icon="comment-outline"/>
+          <Button style={styles.button} mode="outlined" icon="calendar">Today</Button>
+          <Button style={styles.button} mode="outlined" icon="inbox">Inbox</Button>
         </View>
-        <View style={styles.row}>
-          <IconButton
-            disabled={isTitleEmpty()}
-            icon="arrow-up-circle-outline"
-            size={32}
-            onPress={addTodo}
-          />
+        <View style={StyleSheet.flatten([styles.row, styles.spaceBetween])}>
+          <View style={styles.row}>
+            <IconButton color="gray" icon="tag-outline"/>
+            <IconButton color="gray" icon="flag-variant-outline"/>
+            <IconButton color="gray" icon="alarm-check"/>
+            <IconButton color="gray" icon="comment-outline"/>
+          </View>
+          <View style={styles.row}>
+            <IconButton
+              disabled={this.isNameEmpty()}
+              icon="arrow-up-circle-outline"
+              size={32}
+              onPress={() => {
+                this.addTodo(this.state.name);
+                this.clearTitle();
+              }}
+            />
+          </View>
         </View>
       </View>
-    </View>
-  );
+    );
+
+  };
 };
 
 const styles = StyleSheet.create({
@@ -112,7 +145,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
   }
 });
-
-const testFlatten = StyleSheet.flatten([styles.test1, styles.test2, styles.row]);
 
 export default NewTodoContent;

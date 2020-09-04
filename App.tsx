@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect} from 'react';
+import React, {RefObject, useContext, useEffect, useState} from 'react';
 import { StyleSheet } from 'react-native';
 import Observable from 'zen-observable-ts';
 import Amplify, { API, graphqlOperation } from 'aws-amplify';
@@ -14,31 +14,26 @@ import TodayScreen from "./src/screens/TodayScreen";
 import {StackParamList} from "./src/screens/types";
 import NewTodoContent from "./src/components/NewTodoContent";
 import { Context as TodoContext, Todo, Provider as TodoProvider } from "./src/contexts/todoContext";
-import useTodo from "./src/hooks/useTodo";
-import {onCreateTodo, onDeleteTodo} from "./src/graphql/subscriptions";
+import {onCreateTodo, } from "./src/graphql/subscriptions";
+import CustomBottomSheet from "./src/components/CustomBottomSheet";
 
 Amplify.configure(aws_export);
 const Stack = createStackNavigator<StackParamList>();
 const AnimatedView = Animated.View;
 
 const App = () => {
-  const { addTodo, deleteTodo } = useContext(TodoContext);
+  const { addTodo } = useContext(TodoContext);
+  const [isShadowRendered, setShadowRendered] = useState(false);
+
   useEffect(() => {
     const createTodoListener = (API.graphql(graphqlOperation(onCreateTodo)) as Observable<object>)
       .subscribe({
         next: (todoData) => {
+          // @ts-ignore
           const todo = todoData.value.data.onCreateTodo;
           addTodo(todo);
         }
       });
-    const deleteTodoListener = (API.graphql(graphqlOperation(onDeleteTodo)) as Observable<object>)
-      .subscribe({
-        next: (todoData) => {
-          // const todo = todoData.value.data.onDeleteTodo;
-          // deleteTodo(todo);
-        }
-      });
-
     return () => {
       if (createTodoListener) {
         createTodoListener.unsubscribe();
@@ -46,18 +41,31 @@ const App = () => {
     };
   }, []);
 
-  const bs = React.createRef<BottomSheet>();
+  // @ts-ignore
+  const bs = React.createRef<CustomBottomSheet>();
+  const newTodoContentRef = React.createRef<NewTodoContent>();
   let fall = new Animated.Value(1);
 
-  const renderShadow = () => {
+  const renderShadow = (bs: RefObject<BottomSheet>) => {
     const animatedShadowOpacity = Animated.interpolate(fall, {
       inputRange: [0, 1],
       outputRange: [0.5, 0],
     });
 
+    const getPointerEvents = (): 'none' | 'auto' => {
+      if (isShadowRendered) {
+        return 'auto';
+      }
+      return 'none';
+    };
+
     return (
       <AnimatedView
-        pointerEvents="none"
+        onTouchEnd={() => {
+          setShadowRendered(false);
+          bs.current!.snapTo(1)
+        }}
+        pointerEvents={getPointerEvents()}
         style={[
           styles.shadowContainer,
           {
@@ -91,19 +99,23 @@ const App = () => {
           icon="plus"
           style={styles.fab}
           onPress={() => {
-            if (bs && bs.current) {
-              bs.current.snapTo(0);
-            }
+            bs.current!.snapTo(0);
+            newTodoContentRef.current!.focusOnInput();
+            setShadowRendered(true);
           }}
         />
-        <BottomSheet
+        <CustomBottomSheet
           ref={bs}
           snapPoints={[400, 0]}
           initialSnap={1}
-          renderContent={() => { return <NewTodoContent/>}}
+          callbackNode={fall}
+          onCloseStart={() => {
+            newTodoContentRef.current!.blurInput();
+          }}
+          renderContent={() => { return <NewTodoContent ref={newTodoContentRef}/>}}
         />
-        {renderShadow()}
       </Portal>
+      {renderShadow(bs)}
     </NavigationContainer>
   )
 };

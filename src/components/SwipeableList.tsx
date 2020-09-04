@@ -17,7 +17,7 @@ interface SwipeableListProps {
 const SwipeableList: React.FC<SwipeableListProps> = ({data}) => {
   const {removeTodo} = useContext(TodoContext);
   const [swiping, setSwiping] = useState(false);
-  const cleanFromScreen = async (id: string) => {
+  const cleanFromScreen = (id: string) => {
     removeTodo(id);
   };
 
