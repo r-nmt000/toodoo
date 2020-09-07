@@ -16,9 +16,7 @@
 import React, {useRef} from 'react' // "react": "16.9.0"
 import Animated from 'react-native-reanimated' // "react-native-reanimated": "~1.7.0"
 import BottomSheet from 'reanimated-bottom-sheet'
-import BottomSheetBehavior from "reanimated-bottom-sheet";
-import {PanGestureHandler, TapGestureHandler} from "react-native-gesture-handler"; // "reanimated-bottom-sheet": "^1.0.0-alpha.20"
-const { Value, useCode, cond, lessOrEq, or, eq, call, set, neq } = Animated;
+const { Value } = Animated;
 
 declare type Props = {
   /**

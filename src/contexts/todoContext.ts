@@ -56,7 +56,6 @@ const todoReducer = (state: TodoState, action: TodoAction):TodoState => {
     case ActionTypes.ADD_TODO:
       const newTodo = action.payload;
       console.log('addTodo in reducer');
-      console.log(newTodo);
       return {todos: [...state.todos, newTodo]};
     case ActionTypes.EDIT_TODO:
       return state;
