@@ -1,21 +1,26 @@
-import React, {RefObject, useState} from 'react';
+import React, {RefObject, useContext, useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {FAB, Portal} from "react-native-paper";
 import CustomBottomSheet from "./CustomBottomSheet";
 import BottomSheet from 'reanimated-bottom-sheet'
 import NewTodoContent from "./NewTodoContent";
 import Animated from 'react-native-reanimated'
+import { Context as BottomSheetContext } from "../contexts/bottomsheetContext";
 
 interface NewTodoBottomSheetProps {
 }
 
 const NewTodoBottomSheetFAB: React.FC<NewTodoBottomSheetProps> = (props) => {
-  const [isShadowRendered, setShadowRendered] = useState(false);
+  const {state, init, tapFAB, closeBottomSheet} = useContext(BottomSheetContext);
 
   // @ts-ignore
   const bs = React.createRef<CustomBottomSheet>();
   const newTodoContentRef = React.createRef<NewTodoContent>();
   let fall = new Animated.Value(1);
+
+  useEffect(() => {
+    init(bs, newTodoContentRef);
+  }, []);
 
   const renderShadow = (bs: RefObject<BottomSheet>) => {
     const animatedShadowOpacity = Animated.interpolate(fall, {
@@ -24,7 +29,7 @@ const NewTodoBottomSheetFAB: React.FC<NewTodoBottomSheetProps> = (props) => {
     });
 
     const getPointerEvents = (): 'none' | 'auto' => {
-      if (isShadowRendered) {
+      if (state.isBottomSheetOpen) {
         return 'auto';
       }
       return 'none';
@@ -33,7 +38,7 @@ const NewTodoBottomSheetFAB: React.FC<NewTodoBottomSheetProps> = (props) => {
     return (
       <Animated.View
         onTouchEnd={() => {
-          setShadowRendered(false);
+          closeBottomSheet();
           bs.current!.snapTo(1)
         }}
         pointerEvents={getPointerEvents()}
@@ -55,7 +60,7 @@ const NewTodoBottomSheetFAB: React.FC<NewTodoBottomSheetProps> = (props) => {
           onPress={() => {
             bs.current!.snapTo(0);
             newTodoContentRef.current!.focusOnInput();
-            setShadowRendered(true);
+            tapFAB();
           }}
         />
         <CustomBottomSheet
