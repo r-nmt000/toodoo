@@ -11,7 +11,7 @@ import InboxScreen from "./src/screens/InboxScreen";
 import TodayScreen from "./src/screens/TodayScreen";
 import {StackParamList} from "./src/screens/types";
 import { Context as TodoContext, Provider as TodoProvider } from "./src/contexts/todoContext";
-import { Context as BottomSheetContext, Provider as BottomSheetProvider } from "./src/contexts/bottomsheetContext";
+import { Provider as BottomSheetProvider } from "./src/contexts/bottomsheetContext";
 import {onCreateTodo, } from "./src/graphql/subscriptions";
 import NewTodoBottomSheetFAB from "./src/components/NewTodoBottomSheetFAB";
 

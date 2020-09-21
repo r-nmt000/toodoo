@@ -5,7 +5,7 @@ import {
   Animated,
   PanResponder,
   Easing,
-  StyleSheet, PanResponderInstance, PanResponderGestureState
+  StyleSheet, PanResponderInstance, PanResponderGestureState, TouchableOpacity
 } from 'react-native';
 
 interface SwipeableListItemProps {
@@ -13,8 +13,9 @@ interface SwipeableListItemProps {
   message: string;
   cleanFromScreen: (id: string) => void;
   swipingCheck: (isEnabled: boolean) => void;
+  onPress?: () => void;
   renderMainItem: () => JSX.Element;
-  renderLeftItem: (isSwipeComplete: boolean) => JSX.Element;
+  renderLeftItem: (isOpening: boolean, isSwipeComplete: boolean) => JSX.Element;
   renderRightItem: () => JSX.Element;
 }
 
@@ -30,7 +31,7 @@ class SwipeableListItem extends React.Component<SwipeableListItemProps> {
   scrollStopped: boolean;
   panResponder: PanResponderInstance;
   scrollView: boolean = false;
-  state = {isSwipeComplete: false};
+  state = {isOpening: false, isSwipeComplete: false};
 
   constructor(props:SwipeableListItemProps) {
     super(props);
@@ -51,15 +52,18 @@ class SwipeableListItem extends React.Component<SwipeableListItemProps> {
           this.enableScrollView(true);
           const x = gesture.dx - SCROLL_THRESHOLD;
           this.position.setValue({ x, y: 0 });
-          this.setState({isSwipeComplete: x > FORCE_TO_OPEN_THRESHOLD});
+          this.setState({isOpening: true, isSwipeComplete: x > FORCE_TO_OPEN_THRESHOLD});
         } else if (gesture.dx <= -SCROLL_THRESHOLD) {
           this.enableScrollView(true);
           const x = gesture.dx + SCROLL_THRESHOLD;
           this.position.setValue({ x, y: 0 });
+        } else {
+          this.setState({...this.state, isOpening: false});
         }
       },
       onPanResponderRelease: (event, gesture) => {
         this.position.flattenOffset(); // adding animated value to the offset value then it reset the offset to 0.
+        this.setState({...this.state, isOpening: false});
         if (gesture.dx > 0) {
           this.userSwipedRight(gesture);
         } else {
@@ -150,9 +154,8 @@ class SwipeableListItem extends React.Component<SwipeableListItemProps> {
         <Animated.View // LEFT ITEM
           style={[leftButtonContainer, this.getLeftItemDynamicStyle()]}
         >
-          {this.props.renderLeftItem(this.state.isSwipeComplete)}
+          {this.props.renderLeftItem(this.state.isOpening, this.state.isSwipeComplete)}
         </Animated.View>
-
         <Animated.View // MAIN ITEM
           style={[textContainer, this.position.getLayout()]}
           {...this.panResponder.panHandlers}
@@ -167,18 +170,15 @@ class SwipeableListItem extends React.Component<SwipeableListItemProps> {
 const styles = StyleSheet.create({
   leftButtonContainer: {
     position: 'absolute',
-    elevation: 3,
   },
   containerStyle: {
     flex: 1,
     flexDirection: 'row',
-    elevation: 3
   },
   textContainer: {
     width: SCREEN_WIDTH / 1.03,
     borderBottomWidth: 1,
     borderBottomColor: '#aaaaaa',
-    elevation: 3,
     zIndex: 2
   },
   textStyle: {

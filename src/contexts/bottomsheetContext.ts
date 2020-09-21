@@ -46,10 +46,15 @@ const bottomsheetReducer = (state: State, action: Action):State => {
   console.log('bottomsheet reducer is called');
   switch(action.type) {
     case ActionTypes.INIT:
+      console.log('init is called');
       return {bs: action.payload.bs, newTodoContentRef: action.payload.newTodoContentRef, isBottomSheetOpen: false};
     case ActionTypes.SELECT_TODO:
+      state.bs!.current!.snapTo(0);
+      state.newTodoContentRef!.current!.focusOnInput();
       return {...state, selectedTodo: action.payload, isBottomSheetOpen: true};
     case ActionTypes.TAP_FAB:
+      state.bs!.current!.snapTo(0);
+      state.newTodoContentRef!.current!.focusOnInput();
       return {...state, isBottomSheetOpen: true};
     case ActionTypes.CLOSE_BOTTOMSHEET:
       return {...state, isBottomSheetOpen: false};

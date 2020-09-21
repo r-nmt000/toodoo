@@ -9,8 +9,8 @@ export interface Todo {
   id: string;
   name: string;
   completed: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface FetchTodosAction {

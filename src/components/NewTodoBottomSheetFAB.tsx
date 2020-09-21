@@ -1,4 +1,4 @@
-import React, {RefObject, useContext, useEffect, useState} from 'react';
+import React, {RefObject, useContext, useEffect, useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {FAB, Portal} from "react-native-paper";
 import CustomBottomSheet from "./CustomBottomSheet";
@@ -14,8 +14,8 @@ const NewTodoBottomSheetFAB: React.FC<NewTodoBottomSheetProps> = (props) => {
   const {state, init, tapFAB, closeBottomSheet} = useContext(BottomSheetContext);
 
   // @ts-ignore
-  const bs = React.createRef<CustomBottomSheet>();
-  const newTodoContentRef = React.createRef<NewTodoContent>();
+  const bs = useRef<CustomBottomSheet>();
+  const newTodoContentRef = useRef<NewTodoContent>();
   let fall = new Animated.Value(1);
 
   useEffect(() => {
@@ -58,8 +58,6 @@ const NewTodoBottomSheetFAB: React.FC<NewTodoBottomSheetProps> = (props) => {
           icon="plus"
           style={styles.fab}
           onPress={() => {
-            bs.current!.snapTo(0);
-            newTodoContentRef.current!.focusOnInput();
             tapFAB();
           }}
         />
