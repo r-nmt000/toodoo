@@ -2,7 +2,27 @@ type Todo @model {
   id: ID!
   name: String!
   completed: Boolean!
+  dueDateTime: AWSDateTime
+  project: Project @connection(name: "ProjectTodos")
+  labels: [TodoLabel] @connection(name: "TodoLabelConnection")
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
+}
 
+type Project @model {
+  id: ID!
+  name: String!
+  todos: [Todo] @connection(name: "ProjectTodos")
+}
+
+type Label @model {
+  id: ID!
+  name: String!
+  todos: [TodoLabel] @connection(name: "LabelTodoConnection")
+}
+
+type TodoLabel @model {
+  id: ID!
+  todo: Todo @connection(name: "TodoLabelConnection")
+  label: Label @connection(name: "LabelTodoConnection")
 }
