@@ -3,12 +3,12 @@ import {Dispatch} from "react";
 import {API, graphqlOperation} from "aws-amplify";
 import {ActionTypes} from "./types";
 import {listTodos} from "../graphql/queries";
-import {deleteTodo} from "../graphql/mutations";
+import {deleteTodo, updateTodo} from "../graphql/mutations";
 
 export interface Todo {
   id: string;
   name: string;
-  completed: boolean;
+  completed?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -44,7 +44,6 @@ const initialState: TodoState = {
 };
 
 const todoReducer = (state: TodoState, action: TodoAction):TodoState => {
-  console.log('todo reducer is called');
   switch(action.type) {
     case ActionTypes.FETCH_TODOS:
       return {todos: action.payload};
@@ -55,10 +54,10 @@ const todoReducer = (state: TodoState, action: TodoAction):TodoState => {
       return {todos: updatedTodos};
     case ActionTypes.ADD_TODO:
       const newTodo = action.payload;
-      console.log('addTodo in reducer');
       return {todos: [...state.todos, newTodo]};
     case ActionTypes.EDIT_TODO:
-      return state;
+      const editedTodos = state.todos.map(todo => todo.id === action.payload.id ? action.payload : todo);
+      return {todos: editedTodos};
     default:
       return state;
   }
@@ -97,6 +96,8 @@ const addTodo = (dispatch: Dispatch<AddTodoAction>) => {
 
 const editTodo = (dispatch: Dispatch<EditTodoAction>) => {
   return async (todo: Todo) => {
+    const response = await API.graphql(graphqlOperation(updateTodo, {input: todo}));
+    console.log(response);
     dispatch({
       type: ActionTypes.EDIT_TODO,
       payload: todo

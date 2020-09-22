@@ -2,11 +2,11 @@ import createDataContext from "./createDataContext";
 import {Dispatch, RefObject} from "react";
 import BottomSheet from "reanimated-bottom-sheet";
 import {Todo} from "./todoContext";
-import NewTodoContent from "../components/NewTodoContent";
+import EditTodoBottomSheetContent from "../components/EditTodoBottomSheetContent";
 
 interface InitAction {
   type: ActionTypes.INIT;
-  payload: {bs:RefObject<BottomSheet>, newTodoContentRef:RefObject<NewTodoContent>};
+  payload: {bottomSheetRef:RefObject<BottomSheet>, editTodoContentRef:RefObject<EditTodoBottomSheetContent>};
 }
 
 interface SelectTodoAction {
@@ -14,26 +14,21 @@ interface SelectTodoAction {
   payload: Todo;
 }
 
-interface TapFABAction {
-  type: ActionTypes.TAP_FAB;
-}
-
 interface CloseBottomSheetAction {
   type: ActionTypes.CLOSE_BOTTOMSHEET;
 }
 
-type Action = InitAction | SelectTodoAction | TapFABAction | CloseBottomSheetAction;
+type Action = InitAction | SelectTodoAction | CloseBottomSheetAction;
 
 enum ActionTypes {
   INIT,
   SELECT_TODO,
-  TAP_FAB,
   CLOSE_BOTTOMSHEET,
 }
 
 interface State {
-  bs?: RefObject<BottomSheet>;
-  newTodoContentRef?: RefObject<NewTodoContent>
+  bottomSheetRef?: RefObject<BottomSheet>;
+  editTodoContentRef?: RefObject<EditTodoBottomSheetContent>
   selectedTodo?: Todo;
   isBottomSheetOpen: boolean;
 }
@@ -42,20 +37,14 @@ const initialState: State = {
   isBottomSheetOpen: false,
 };
 
-const bottomsheetReducer = (state: State, action: Action):State => {
-  console.log('bottomsheet reducer is called');
+const editTodoBottomSheetReducer = (state: State, action: Action):State => {
   switch(action.type) {
     case ActionTypes.INIT:
-      console.log('init is called');
-      return {bs: action.payload.bs, newTodoContentRef: action.payload.newTodoContentRef, isBottomSheetOpen: false};
+      return {bottomSheetRef: action.payload.bottomSheetRef, editTodoContentRef: action.payload.editTodoContentRef, isBottomSheetOpen: false};
     case ActionTypes.SELECT_TODO:
-      state.bs!.current!.snapTo(0);
-      state.newTodoContentRef!.current!.focusOnInput(action.payload.name);
+      state.bottomSheetRef!.current!.snapTo(0);
+      state.editTodoContentRef!.current!.setState({id: action.payload.id, name: action.payload.name});
       return {...state, selectedTodo: action.payload, isBottomSheetOpen: true};
-    case ActionTypes.TAP_FAB:
-      state.bs!.current!.snapTo(0);
-      state.newTodoContentRef!.current!.focusOnInput("");
-      return {...state, isBottomSheetOpen: true};
     case ActionTypes.CLOSE_BOTTOMSHEET:
       return {...state, isBottomSheetOpen: false};
     default:
@@ -64,28 +53,19 @@ const bottomsheetReducer = (state: State, action: Action):State => {
 };
 
 const init = (dispatch: Dispatch<InitAction>) => {
-  return async (bs: RefObject<BottomSheet>, newTodoContentRef: RefObject<NewTodoContent>) => {
+  return async (bottomSheetRef: RefObject<BottomSheet>, editTodoContentRef: RefObject<EditTodoBottomSheetContent>) => {
     dispatch({
       type: ActionTypes.INIT,
-      payload: {bs, newTodoContentRef}
+      payload: {bottomSheetRef: bottomSheetRef, editTodoContentRef: editTodoContentRef}
     })
   };
 };
-
 
 const selectTodo = (dispatch: Dispatch<SelectTodoAction>) => {
   return async (selectedTodo: Todo) => {
     dispatch({
       type: ActionTypes.SELECT_TODO,
       payload: selectedTodo
-    })
-  };
-};
-
-const tapFAB = (dispatch: Dispatch<TapFABAction>) => {
-  return async () => {
-    dispatch({
-      type: ActionTypes.TAP_FAB,
     })
   };
 };
@@ -99,6 +79,6 @@ const closeBottomSheet = (dispatch: Dispatch<CloseBottomSheetAction>) => {
 };
 
 export const { Context, Provider } = createDataContext(
-  bottomsheetReducer,
-  {init, selectTodo, tapFAB, closeBottomSheet},
+  editTodoBottomSheetReducer,
+  {init, selectTodo, closeBottomSheet},
   initialState);

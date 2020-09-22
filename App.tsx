@@ -11,9 +11,11 @@ import InboxScreen from "./src/screens/InboxScreen";
 import TodayScreen from "./src/screens/TodayScreen";
 import {StackParamList} from "./src/screens/types";
 import { Context as TodoContext, Provider as TodoProvider } from "./src/contexts/todoContext";
-import { Provider as BottomSheetProvider } from "./src/contexts/bottomsheetContext";
+import { Provider as NewTodoBottomSheetProvider } from "./src/contexts/bottomsheetContext";
+import { Provider as EditTodoBottomSheetProvider } from "./src/contexts/editTodoBottomSheetContext";
 import {onCreateTodo, } from "./src/graphql/subscriptions";
 import NewTodoBottomSheetFAB from "./src/components/NewTodoBottomSheetFAB";
+import EditTodoBottomSheet from "./src/components/EditTodoBottomSheet";
 
 Amplify.configure(aws_export);
 const Stack = createStackNavigator<StackParamList>();
@@ -56,6 +58,7 @@ const App = () => {
         />
       </Stack.Navigator>
       <NewTodoBottomSheetFAB/>
+      <EditTodoBottomSheet/>
     </NavigationContainer>
   )
 };
@@ -72,11 +75,13 @@ const styles = StyleSheet.create({
 export default () => {
   return (
     <PaperProvider>
-      <BottomSheetProvider>
-        <TodoProvider>
-          <App/>
-        </TodoProvider>
-      </BottomSheetProvider>
+      <EditTodoBottomSheetProvider>
+        <NewTodoBottomSheetProvider>
+          <TodoProvider>
+            <App/>
+          </TodoProvider>
+        </NewTodoBottomSheetProvider>
+      </EditTodoBottomSheetProvider>
     </PaperProvider>
   );
 }

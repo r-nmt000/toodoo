@@ -1,41 +1,30 @@
 import React from 'react';
 import {View, TextInput, StyleSheet } from 'react-native';
 import {Button, IconButton} from "react-native-paper";
-import { API, graphqlOperation } from 'aws-amplify';
-import {createTodo} from "../graphql/mutations";
 import { Context as TodoContext } from "../contexts/todoContext";
 
-interface NewTodoContentProps {
+interface EditTodoBottomSheetContentProps {
 }
 
-interface NewTodoContentStatus {
+interface EditTodoBottomSheetContentStatus {
+  id: string
   name: string
 }
 
-class NewTodoContent extends React.Component<NewTodoContentProps, NewTodoContentStatus>{
+class EditTodoBottomSheetContent extends React.Component<EditTodoBottomSheetContentProps, EditTodoBottomSheetContentStatus>{
   static contextType = TodoContext;
   inputRef = React.createRef<TextInput>();
 
   state = {
-    id: undefined,
+    id: "",
     name: ""
   };
 
-  isNameEmpty = (): boolean => {
+  private isNameEmpty = (): boolean => {
     if (this.state.name) {
       return false;
     }
     return true;
-  };
-
-  addTodo = () => {
-    const input = {
-      name: this.state.name,
-      completed: false,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    API.graphql(graphqlOperation(createTodo, {input}));
   };
 
   updateTodo = () => {
@@ -47,15 +36,12 @@ class NewTodoContent extends React.Component<NewTodoContentProps, NewTodoContent
     editTodo(input);
   };
 
-  clearTitle = () => {
-    this.setState({name: ""});
-  };
-
   focusOnInput = () => {
     if (this.inputRef && this.inputRef.current) {
       this.inputRef.current.focus();
     }
   };
+
   blurInput = () => {
     if (this.inputRef && this.inputRef.current) {
       this.inputRef.current.blur();
@@ -72,12 +58,8 @@ class NewTodoContent extends React.Component<NewTodoContentProps, NewTodoContent
           value={this.state.name}
           onChangeText={text => this.setState({name:text})}
           onKeyPress={({nativeEvent: {key}}) => {
-            console.log('onkeypress called');
-            console.log(key);
             if (key === 'Enter') {
-              console.log('enter is pressed');
-              this.addTodo();
-              this.clearTitle();
+              this.updateTodo();
             }
           }}
         />
@@ -98,12 +80,7 @@ class NewTodoContent extends React.Component<NewTodoContentProps, NewTodoContent
               icon="arrow-up-circle-outline"
               size={32}
               onPress={() => {
-                if (this.state.id) {
-                  this.updateTodo();
-                } else {
-                  this.addTodo();
-                }
-                this.clearTitle();
+                this.updateTodo();
               }}
             />
           </View>
@@ -161,4 +138,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default NewTodoContent;
+export default EditTodoBottomSheetContent;
