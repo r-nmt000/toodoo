@@ -12,7 +12,7 @@ interface NewTodoContentStatus {
   name: string
 }
 
-class NewTodoContent extends React.Component<NewTodoContentProps, NewTodoContentStatus>{
+class NewTodoBottomSheetContent extends React.Component<NewTodoContentProps, NewTodoContentStatus>{
   static contextType = TodoContext;
   inputRef = React.createRef<TextInput>();
 
@@ -161,4 +161,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default NewTodoContent;
+export default NewTodoBottomSheetContent;

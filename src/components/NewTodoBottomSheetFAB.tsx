@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 import {FAB, Portal} from "react-native-paper";
 import CustomBottomSheet from "./CustomBottomSheet";
 import BottomSheet from 'reanimated-bottom-sheet'
-import NewTodoContent from "./NewTodoContent";
+import NewTodoBottomSheetContent from "./NewTodoBottomSheetContent";
 import Animated from 'react-native-reanimated'
 import { Context as BottomSheetContext } from "../contexts/newTodoBottomSheetContext";
 
@@ -15,7 +15,7 @@ const NewTodoBottomSheetFAB: React.FC<NewTodoBottomSheetProps> = (props) => {
 
   // @ts-ignore
   const bs = useRef<CustomBottomSheet>();
-  const newTodoContentRef = useRef<NewTodoContent>();
+  const newTodoContentRef = useRef<NewTodoBottomSheetContent>();
   let fall = new Animated.Value(1);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ const NewTodoBottomSheetFAB: React.FC<NewTodoBottomSheetProps> = (props) => {
           onCloseStart={() => {
             newTodoContentRef.current!.blurInput();
           }}
-          renderContent={() => { return <NewTodoContent ref={newTodoContentRef}/>}}
+          renderContent={() => { return <NewTodoBottomSheetContent ref={newTodoContentRef}/>}}
         />
       </Portal>
       {renderShadow(bs)}

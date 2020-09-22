@@ -7,7 +7,7 @@ interface TodoListItemProps {
   onPress?: () => void;
 }
 
-const TodoListItem: React.FC<TodoListItemProps> = ({name, onPress, swiping}) => {
+const TodoListItem: React.FC<TodoListItemProps> = ({name, onPress}) => {
   return (
     <TouchableOpacity
       style={styles.container}
