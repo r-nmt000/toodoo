@@ -21,7 +21,7 @@ const EditTodoBottomSheet: React.FC<EditTodoBottomSheetProps> = (props) => {
     init(bottomSheetRef, contentRef);
   }, []);
 
-  const renderShadow = (bs: RefObject<BottomSheet>) => {
+  const renderShadow = (bottomSheetRef: RefObject<BottomSheet>) => {
     const animatedShadowOpacity = Animated.interpolate(fall, {
       inputRange: [0, 1],
       outputRange: [0.5, 0],
@@ -38,7 +38,7 @@ const EditTodoBottomSheet: React.FC<EditTodoBottomSheetProps> = (props) => {
       <Animated.View
         onTouchEnd={() => {
           closeBottomSheet();
-          bs.current!.snapTo(1)
+          bottomSheetRef.current!.snapTo(1)
         }}
         pointerEvents={getPointerEvents()}
         style={[

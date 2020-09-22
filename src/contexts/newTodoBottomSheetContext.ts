@@ -6,7 +6,7 @@ import NewTodoContent from "../components/NewTodoContent";
 
 interface InitAction {
   type: ActionTypes.INIT;
-  payload: {bs:RefObject<BottomSheet>, newTodoContentRef:RefObject<NewTodoContent>};
+  payload: {bottomSheetRef:RefObject<BottomSheet>, newTodoContentRef:RefObject<NewTodoContent>};
 }
 
 interface SelectTodoAction {
@@ -32,7 +32,7 @@ enum ActionTypes {
 }
 
 interface State {
-  bs?: RefObject<BottomSheet>;
+  bottomSheetRef?: RefObject<BottomSheet>;
   newTodoContentRef?: RefObject<NewTodoContent>
   selectedTodo?: Todo;
   isBottomSheetOpen: boolean;
@@ -47,13 +47,13 @@ const bottomsheetReducer = (state: State, action: Action):State => {
   switch(action.type) {
     case ActionTypes.INIT:
       console.log('init is called');
-      return {bs: action.payload.bs, newTodoContentRef: action.payload.newTodoContentRef, isBottomSheetOpen: false};
+      return {bottomSheetRef: action.payload.bottomSheetRef, newTodoContentRef: action.payload.newTodoContentRef, isBottomSheetOpen: false};
     case ActionTypes.SELECT_TODO:
-      state.bs!.current!.snapTo(0);
+      state.bottomSheetRef!.current!.snapTo(0);
       state.newTodoContentRef!.current!.focusOnInput(action.payload.name);
       return {...state, selectedTodo: action.payload, isBottomSheetOpen: true};
     case ActionTypes.TAP_FAB:
-      state.bs!.current!.snapTo(0);
+      state.bottomSheetRef!.current!.snapTo(0);
       state.newTodoContentRef!.current!.focusOnInput("");
       return {...state, isBottomSheetOpen: true};
     case ActionTypes.CLOSE_BOTTOMSHEET:
@@ -64,10 +64,10 @@ const bottomsheetReducer = (state: State, action: Action):State => {
 };
 
 const init = (dispatch: Dispatch<InitAction>) => {
-  return async (bs: RefObject<BottomSheet>, newTodoContentRef: RefObject<NewTodoContent>) => {
+  return async (bottomSheetRef: RefObject<BottomSheet>, newTodoContentRef: RefObject<NewTodoContent>) => {
     dispatch({
       type: ActionTypes.INIT,
-      payload: {bs, newTodoContentRef}
+      payload: {bottomSheetRef: bottomSheetRef, newTodoContentRef}
     })
   };
 };

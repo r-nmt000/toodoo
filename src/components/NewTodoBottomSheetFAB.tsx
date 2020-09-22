@@ -5,7 +5,7 @@ import CustomBottomSheet from "./CustomBottomSheet";
 import BottomSheet from 'reanimated-bottom-sheet'
 import NewTodoContent from "./NewTodoContent";
 import Animated from 'react-native-reanimated'
-import { Context as BottomSheetContext } from "../contexts/bottomsheetContext";
+import { Context as BottomSheetContext } from "../contexts/newTodoBottomSheetContext";
 
 interface NewTodoBottomSheetProps {
 }
