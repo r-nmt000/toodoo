@@ -30,6 +30,7 @@ const MenuScreen: React.FC<MenuScreenProps> = ({navigation})  => {
             chevron
             bottomDivider={true}
             title="Inbox"
+            titleStyle={styles.listTitle}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -41,6 +42,7 @@ const MenuScreen: React.FC<MenuScreenProps> = ({navigation})  => {
             chevron
             bottomDivider={true}
             title="Today"
+            titleStyle={styles.listTitle}
           />
         </TouchableOpacity>
         <ProjectList/>
@@ -53,6 +55,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     flex: 1
+  },
+  listTitle: {
+    fontWeight: "bold",
   }
 });
 

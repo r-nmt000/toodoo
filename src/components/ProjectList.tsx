@@ -26,6 +26,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
         <List.Item
           key={project.id}
           title={project.name}
+          left={props => <List.Icon {...props} style={styles.newProjectIcon} icon="circle"/>}
         />
       );
     });
@@ -45,8 +46,9 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
       >
         <ListItem
           chevron
+          titleStyle={styles.projectListHeader}
           bottomDivider={true}
-          title="Project"
+          title="Projects"
         />
       </TouchableOpacity>
       <Collapsible
@@ -54,7 +56,9 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
       >
         {renderProjects()}
         <List.Item
-          title="Add new project"
+          title="New project"
+          titleStyle={styles.newProjectTitle}
+          left={props => <List.Icon {...props} style={styles.newProjectIcon} icon="plus"/>}
           onPress={openBottomSheet}
         />
       </Collapsible>
@@ -63,6 +67,28 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  projectListHeader: {
+    fontWeight: "bold",
+  },
+  projectListItemTitle: {
+
+  },
+  newProjectTitle: {
+    marginLeft: 0,
+    paddingLeft: 0,
+    // borderColor: 'gray',
+    // borderWidth: 1,
+  },
+  newProjectIcon: {
+    width: 24,
+    marginLeft: 0,
+    marginRight: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
+    // borderColor: 'gray',
+    // borderWidth: 1,
+  }
+});
 
 export default ProjectList;
