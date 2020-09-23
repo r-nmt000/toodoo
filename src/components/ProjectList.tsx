@@ -13,16 +13,30 @@ interface ProjectListProps {
 
 const ProjectList: React.FC<ProjectListProps> = (props) => {
   const [isCollapsed, setCollapsed] = useState(true);
-  const {fetchProjects} = useContext(ProjectContext);
+  const {state: {projects}, fetchProjects} = useContext(ProjectContext);
   const {openBottomSheet} = useContext(NewProjectBottomSheetContext);
 
   const toggleCollapsed = () => {
     setCollapsed(!isCollapsed);
   };
 
+  const renderProjects = () => {
+    return projects.map((project:Project) => {
+      return (
+        <List.Item
+          key={project.id}
+          title={project.name}
+        />
+      );
+    });
+
+  };
+
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [projects]);
+
+
 
   return (
     <>
@@ -38,8 +52,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
       <Collapsible
         collapsed={isCollapsed}
       >
-        <List.Item title="test"/>
-        <List.Item title="test"/>
+        {renderProjects()}
         <List.Item
           title="Add new project"
           onPress={openBottomSheet}

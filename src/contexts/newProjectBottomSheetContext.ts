@@ -42,6 +42,7 @@ const newProjectBottomSheetReducer = (state: State, action: Action):State => {
       return {bottomSheetRef: action.payload.bottomSheetRef, newProjectContentRef: action.payload.newProjectContentRef, isBottomSheetOpen: false};
     case ActionTypes.OPEN_BOTTOMSHEET:
       state.bottomSheetRef!.current!.snapTo(0);
+      state.newProjectContentRef!.current!.focusOnInput();
       return {...state, isBottomSheetOpen: true};
     case ActionTypes.CLOSE_BOTTOMSHEET:
       return {...state, isBottomSheetOpen: false};

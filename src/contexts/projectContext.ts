@@ -2,10 +2,10 @@ import createDataContext from "./createDataContext";
 import {Dispatch} from "react";
 import {API, graphqlOperation} from "aws-amplify";
 import {listProjects} from "../graphql/queries";
-import {deleteProject, updateProject} from "../graphql/mutations";
+import {createProject, deleteProject, updateProject} from "../graphql/mutations";
 
 export interface Project {
-  id: string;
+  id?: string;
   name: string;
 }
 
@@ -93,7 +93,8 @@ const addProject = (dispatch: Dispatch<AddProjectAction>) => {
     dispatch({
       type: ActionTypes.ADD_PROJECT,
       payload: project
-    })
+    });
+    await API.graphql(graphqlOperation(createProject, {input:project}));
   };
 };
 

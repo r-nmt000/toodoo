@@ -27,13 +27,12 @@ class NewProjectBottomSheetContent extends React.Component<NewProjectBottomSheet
     return true;
   };
 
-  updateProject = () => {
-    const input = {
-      id: this.state.id,
+  addProject = () => {
+    const project = {
       name: this.state.name,
     };
-    const {newProject} = this.context;
-    newProject(input);
+    const {addProject} = this.context;
+    addProject(project);
   };
 
   focusOnInput = () => {
@@ -59,7 +58,7 @@ class NewProjectBottomSheetContent extends React.Component<NewProjectBottomSheet
           onChangeText={text => this.setState({name:text})}
           onKeyPress={({nativeEvent: {key}}) => {
             if (key === 'Enter') {
-              this.updateProject();
+              this.addProject();
             }
           }}
         />
@@ -80,7 +79,7 @@ class NewProjectBottomSheetContent extends React.Component<NewProjectBottomSheet
               icon="arrow-up-circle-outline"
               size={32}
               onPress={() => {
-                this.updateProject();
+                this.addProject();
               }}
             />
           </View>
