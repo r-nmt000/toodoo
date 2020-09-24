@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   listTitle: {
-    fontWeight: "bold",
+    fontWeight: "600",
   }
 });
 

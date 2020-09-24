@@ -13,11 +13,17 @@ interface ProjectListProps {
 
 const ProjectList: React.FC<ProjectListProps> = (props) => {
   const [isCollapsed, setCollapsed] = useState(true);
+  const [backgroundColor, setBackgroundColor] = useState('#ffffff');
   const {state: {projects}, fetchProjects} = useContext(ProjectContext);
   const {openBottomSheet} = useContext(NewProjectBottomSheetContext);
 
-  const toggleCollapsed = () => {
+  const toggleCollapsed = (): void => {
     setCollapsed(!isCollapsed);
+    if (isCollapsed) {
+      setBackgroundColor("#eeeeee");
+    } else {
+      setBackgroundColor("#ffffff");
+    }
   };
 
   const renderProjects = () => {
@@ -37,8 +43,6 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
     fetchProjects();
   }, [projects]);
 
-
-
   return (
     <>
       <TouchableOpacity
@@ -47,6 +51,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
         <ListItem
           chevron
           titleStyle={styles.projectListHeader}
+          containerStyle={{backgroundColor: backgroundColor}}
           bottomDivider={true}
           title="Projects"
         />
@@ -69,7 +74,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
 
 const styles = StyleSheet.create({
   projectListHeader: {
-    fontWeight: "bold",
+    fontWeight: "600",
   },
   projectListItemTitle: {
 
