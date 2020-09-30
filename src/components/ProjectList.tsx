@@ -1,29 +1,22 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import { List } from 'react-native-paper';
-import {ListItem} from "react-native-elements";
 import Collapsible from "react-native-collapsible";
 import {Project} from "../contexts/projectContext";
 import { Context as ProjectContext } from "../contexts/projectContext";
 import { Context as NewProjectBottomSheetContext } from "../contexts/newProjectBottomSheetContext";
-import NewProjectBottomSheet from "./NewProjectBottomSheet";
+import ProjectListHeader from "./ProjectListHeader";
 
 interface ProjectListProps {
 }
 
 const ProjectList: React.FC<ProjectListProps> = (props) => {
   const [isCollapsed, setCollapsed] = useState(true);
-  const [backgroundColor, setBackgroundColor] = useState('#ffffff');
   const {state: {projects}, fetchProjects} = useContext(ProjectContext);
   const {openBottomSheet} = useContext(NewProjectBottomSheetContext);
 
   const toggleCollapsed = (): void => {
     setCollapsed(!isCollapsed);
-    if (isCollapsed) {
-      setBackgroundColor("#eeeeee");
-    } else {
-      setBackgroundColor("#ffffff");
-    }
   };
 
   const renderProjects = () => {
@@ -48,13 +41,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
       <TouchableOpacity
         onPress={toggleCollapsed}
       >
-        <ListItem
-          chevron
-          titleStyle={styles.projectListHeader}
-          containerStyle={{backgroundColor: backgroundColor}}
-          bottomDivider={true}
-          title="Projects"
-        />
+        <ProjectListHeader isCollapsed={isCollapsed}/>
       </TouchableOpacity>
       <Collapsible
         collapsed={isCollapsed}
@@ -67,7 +54,6 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
           onPress={openBottomSheet}
         />
       </Collapsible>
-      <NewProjectBottomSheet/>
     </>
   );
 };
