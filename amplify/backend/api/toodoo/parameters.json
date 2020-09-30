@@ -2,5 +2,6 @@
     "AppSyncApiName": "toodoo",
     "DynamoDBBillingMode": "PAY_PER_REQUEST",
     "DynamoDBEnableServerSideEncryption": "false",
-    "APIKeyExpirationEpoch": 1600958779
+    "CreateAPIKey": 1,
+    "APIKeyExpirationEpoch": 1632833003
 }
