@@ -35,6 +35,10 @@ class NewProjectBottomSheetContent extends React.Component<NewProjectBottomSheet
     addProject(project);
   };
 
+  clearTitle = () => {
+    this.setState({name: ""});
+  };
+
   focusOnInput = () => {
     if (this.inputRef && this.inputRef.current) {
       this.inputRef.current.focus();
@@ -80,6 +84,7 @@ class NewProjectBottomSheetContent extends React.Component<NewProjectBottomSheet
               size={32}
               onPress={() => {
                 this.addProject();
+                this.clearTitle();
               }}
             />
           </View>
