@@ -48,6 +48,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
       >
         {renderProjects()}
         <List.Item
+          key="newProject"
           title="New project"
           titleStyle={styles.newProjectTitle}
           left={props => <List.Icon {...props} style={styles.newProjectIcon} icon="plus"/>}
