@@ -6,9 +6,10 @@ import { StackParamList } from "./types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from '@react-navigation/native';
 import SwipeableList from "../components/SwipeableList";
+import TodoList from "../components/TodoList";
 
-type InboxScreenNavigationProp = StackNavigationProp<StackParamList, 'InboxScreen'>
-type InboxScreenRouteProp = RouteProp<StackParamList, 'MenuScreen'>
+type InboxScreenNavigationProp = StackNavigationProp<StackParamList, 'InboxScreen'>;
+type InboxScreenRouteProp = RouteProp<StackParamList, 'MenuScreen'>;
 
 interface InboxScreenProps {
   navigation: InboxScreenNavigationProp,
@@ -22,7 +23,7 @@ const InboxScreen: React.FC<InboxScreenProps> = ({navigation}) => {
   return (
     <View style={styles.container}>
       <NavigationEvents onWillFocus={fetchTodos}/>
-      <SwipeableList data={todos}/>
+      <TodoList todos={todos}/>
     </View>
   );
 };

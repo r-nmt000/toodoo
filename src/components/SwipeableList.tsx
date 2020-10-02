@@ -1,10 +1,8 @@
-import React, {useContext, useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {Text, StyleSheet, ScrollView, LayoutAnimation, UIManager} from 'react-native';
 import SwipeableListItem from "./SwipeableListItem";
 import TodoListLeftItem from "./TodoListLeftItem";
 import TodoListItem from "./TodoListItem";
-import { Context as TodoContext } from "../contexts/todoContext";
-import { Context as EditTodoBottomSheetContext } from "../contexts/editTodoBottomSheetContext";
 
 export interface Item {
   id: string;
@@ -13,15 +11,12 @@ export interface Item {
 
 interface SwipeableListProps {
   data: Item[];
+  selectItem: (id: string, ...props: any[]) => void;
+  cleanFromScreen: (id: string) => void;
 }
 
-const SwipeableList: React.FC<SwipeableListProps> = ({data}) => {
-  const {removeTodo} = useContext(TodoContext);
-  const {selectTodo} = useContext(EditTodoBottomSheetContext);
+const SwipeableList: React.FC<SwipeableListProps> = ({data, selectItem, cleanFromScreen}) => {
   const [swiping, setSwiping] = useState(false);
-  const cleanFromScreen = (id: string) => {
-    removeTodo(id);
-  };
 
   useLayoutEffect(() => {
     UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -41,8 +36,7 @@ const SwipeableList: React.FC<SwipeableListProps> = ({data}) => {
             return <TodoListItem
               name={item.name}
               onPress={() => {
-                console.log('onPress is called');
-                selectTodo({id: item.id, name: item.name, completed: false})
+                selectItem(item.id, item.name);
               }}
             />
           }}
