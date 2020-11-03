@@ -41,7 +41,7 @@ const MenuScreen: React.FC<MenuScreenProps> = ({navigation})  => {
           titleStyle={styles.listTitle}
         />
       </TouchableOpacity>
-      <ProjectList/>
+      <ProjectList navigation={navigation}/>
     </View>
   );
 };

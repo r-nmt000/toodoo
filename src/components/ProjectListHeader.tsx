@@ -25,7 +25,7 @@ const ProjectListHeader: React.FC<ProjectListHeaderProps> = ({isCollapsed}) => {
   return (
     <>
       <List.Item
-        title="aProjects"
+        title="Projects"
         titleStyle={styles.projectListHeader}
         style={{backgroundColor: backgroundColor}}
         right={props => <ListHeaderIconSet ref={chevronIconRef}/>}

@@ -37,5 +37,8 @@
     "@types/react-native": "^0.63.4",
     "typescript": "~3.9.5"
   },
+  "resolutions": {
+    "@react-native-community/cli-debugger-ui": "4.7.0"
+  },
   "private": true
 }

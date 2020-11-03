@@ -6,11 +6,15 @@ import {Project} from "../contexts/projectContext";
 import { Context as ProjectContext } from "../contexts/projectContext";
 import { Context as NewProjectBottomSheetContext } from "../contexts/newProjectBottomSheetContext";
 import ProjectListHeader from "./ProjectListHeader";
+import {StackNavigationProp} from "@react-navigation/stack";
+import {StackParamList} from "../screens/types";
 
+type MenuScreenNavigationProp = StackNavigationProp<StackParamList, 'MenuScreen'>
 interface ProjectListProps {
+  navigation: MenuScreenNavigationProp,
 }
 
-const ProjectList: React.FC<ProjectListProps> = (props) => {
+const ProjectList: React.FC<ProjectListProps> = ({navigation}) => {
   const [isCollapsed, setCollapsed] = useState(true);
   const {state: {projects}, fetchProjects} = useContext(ProjectContext);
   const {openBottomSheet} = useContext(NewProjectBottomSheetContext);
@@ -22,11 +26,18 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
   const renderProjects = () => {
     return projects.map((project:Project) => {
       return (
-        <List.Item
-          key={project.id}
-          title={project.name}
-          left={props => <List.Icon {...props} style={styles.newProjectIcon} icon="circle"/>}
-        />
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('ProjectTodoScreen', {id: project.id})
+          }}
+        >
+          <List.Item
+            key={project.id}
+            title={project.name}
+            left={props => <List.Icon {...props} style={styles.newProjectIcon} icon="circle"/>}
+          />
+
+        </TouchableOpacity>
       );
     });
 

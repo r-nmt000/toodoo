@@ -19,6 +19,7 @@ import {onCreateTodo, } from "./src/graphql/subscriptions";
 import NewTodoBottomSheetFAB from "./src/components/NewTodoBottomSheetFAB";
 import EditTodoBottomSheet from "./src/components/EditTodoBottomSheet";
 import NewProjectBottomSheet from "./src/components/NewProjectBottomSheet";
+import ProjectTodoScreen from "./src/screens/projects/ProjectTodoScreen";
 
 Amplify.configure(aws_export);
 const Stack = createStackNavigator<StackParamList>();
@@ -58,6 +59,10 @@ const App = () => {
         <Stack.Screen
           name="TodayScreen"
           component={TodayScreen}
+        />
+        <Stack.Screen
+          name="ProjectTodoScreen"
+          component={ProjectTodoScreen}
         />
       </Stack.Navigator>
       <NewTodoBottomSheetFAB/>
