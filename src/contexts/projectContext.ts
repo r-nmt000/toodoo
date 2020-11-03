@@ -1,19 +1,27 @@
 import createDataContext from "./createDataContext";
 import {Dispatch} from "react";
 import {API, graphqlOperation} from "aws-amplify";
-import {listProjects} from "../graphql/queries";
+import {FetchProject, getProject, listProjects} from "../graphql/queries";
 import {createProject, deleteProject, updateProject} from "../graphql/mutations";
+import {Todo} from "./todoContext";
 
 export interface Project {
   id?: string;
   name: string;
+  todos?: Todo[]
 }
 
 enum ActionTypes {
+  FETCH_PROJECT,
   FETCH_PROJECTS,
   DELETE_PROJECT,
   ADD_PROJECT,
   EDIT_PROJECT,
+}
+
+interface FetchProjectAction {
+  type: ActionTypes.FETCH_PROJECT;
+  payload: Project[];
 }
 
 interface FetchProjectsAction {
@@ -36,7 +44,7 @@ interface EditProjectAction {
   payload: Project;
 }
 
-type ProjectAction = FetchProjectsAction | DeleteProjectAction | AddProjectAction | EditProjectAction;
+type ProjectAction = FetchProjectAction | FetchProjectsAction | DeleteProjectAction | AddProjectAction | EditProjectAction;
 
 interface ProjectState {
   projects: Project[]
@@ -48,6 +56,8 @@ const initialState: ProjectState = {
 
 const projectReducer = (state: ProjectState, action: ProjectAction):ProjectState => {
   switch(action.type) {
+    case ActionTypes.FETCH_PROJECT:
+      return {projects: action.payload};
     case ActionTypes.FETCH_PROJECTS:
       return {projects: action.payload};
     case ActionTypes.DELETE_PROJECT:
@@ -73,6 +83,18 @@ const fetchProjects = (dispatch: Dispatch<FetchProjectsAction>) => {
       type: ActionTypes.FETCH_PROJECTS,
       // @ts-ignore
       payload: response.data.listProjects.items
+    })
+  };
+};
+
+const fetchProject = (dispatch: Dispatch<FetchProjectAction>) => {
+  return async (projectId: string) => {
+    const response = await API.graphql(graphqlOperation(getProject, {id: projectId}));
+    // @ts-ignore
+    const projects = [response.data.getProject];
+    dispatch({
+      type: ActionTypes.FETCH_PROJECT,
+      payload: projects
     })
   };
 };
@@ -112,5 +134,5 @@ const editProject = (dispatch: Dispatch<EditProjectAction>) => {
 
 export const { Context, Provider } = createDataContext(
   projectReducer,
-  {fetchProjects, addProject, removeProject, editProject},
+  {fetchProject, fetchProjects, addProject, removeProject, editProject},
   initialState);

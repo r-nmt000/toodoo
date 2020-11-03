@@ -3,8 +3,9 @@ import {StyleSheet, View, Text} from 'react-native';
 import {StackParamList} from "../types";
 import {StackNavigationProp} from "@react-navigation/stack";
 import { RouteProp } from '@react-navigation/native';
-import { Context as TodoContext } from "../../contexts/todoContext";
+import { Context as ProjectContext, Project } from "../../contexts/projectContext";
 import {NavigationEvents} from "@react-navigation/compat";
+import TodoList from "../../components/TodoList";
 
 type ProjectTodoScreenNavigationProp = StackNavigationProp<StackParamList, 'ProjectTodoScreen'>;
 type ProjectTodoScreenRouteProp = RouteProp<StackParamList, 'ProjectTodoScreen'>;
@@ -15,13 +16,13 @@ interface ProjectTodoScreenProps {
   title: string,
 }
 
-const ProjectTodoScreen: React.FC<ProjectTodoScreenProps> = (props) => {
-  const {state: {todos}, fetchTodos} = useContext(TodoContext);
+const ProjectTodoScreen: React.FC<ProjectTodoScreenProps> = ({route}) => {
+  const {state: {projects}, fetchProject} = useContext(ProjectContext);
+  const projectId = route.params?.id;
   return (
     <View style={styles.container}>
-      <NavigationEvents onWillFocus={fetchTodos}/>
-      {/*<TodoList data={todos}/>*/}
-      <Text>aaaa</Text>
+      <NavigationEvents onWillFocus={() => {fetchProject(projectId)}}/>
+      <TodoList todos={projects[0].todos.items || []}/>
     </View>
   );
 };

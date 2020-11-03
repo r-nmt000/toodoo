@@ -18,7 +18,6 @@ interface InboxScreenProps {
 
 const InboxScreen: React.FC<InboxScreenProps> = ({navigation}) => {
   const {state: {todos}, fetchTodos} = useContext(TodoContext);
-  console.log('inboxScreen is rendered');
 
   return (
     <View style={styles.container}>
